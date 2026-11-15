@@ -1,0 +1,64 @@
+# Output directory; a relative path is relative to the repository root
+outputpath: "outputs"
+
+# Hydra: no run directory / log files created in the working directory
+defaults:
+  - _self_
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+hydra:
+  output_subdir: null
+  run:
+    dir: .
+
+# EFO / MONDO trait ids to search in the PGS Catalog
+trait:
+  - MONDO_0005258
+  - MONDO_0002050
+  - MONDO_0002009
+  - MONDO_0004985
+  - EFO_0009963
+  - EFO_0009964
+  - MONDO_0007743
+  - MONDO_0005090
+  - MONDO_0005618
+  - MONDO_0005146
+  - PGS002332
+
+# Also fetch the scores of the child traits of each trait (as the PGS Catalog website does),
+# e.g. bipolar disorder -> + bipolar I disorder, bipolar II disorder
+include_child_traits: true
+
+# Merge a queried trait into another queried trait it descends from
+# (bipolar I disorder + bipolar II disorder + bipolar disorder -> bipolar disorder)
+group_child_traits: true
+
+# Explicit groups {group name: [trait ids]}, override the automatic grouping.
+# Useful when traits are not parent/child in the ontology or to choose the group name.
+trait_groups:
+  depression: [MONDO_0002050, MONDO_0002009]  # depressive disorder + major depressive disorder
+
+# Ancestry of the population the score will be applied to
+# (EUR, EAS, SAS, AFR, AMR, GME, ASN)
+target_ancestry: EUR
+
+# Filters (set to null to disable):
+# keep only the scores published between date_min and date_max (years, inclusive)
+date_min: 2019
+date_max: 2026
+# keep only the scores with at least n_snp variants
+n_snp: 20000
+
+# Optional, per trait (trait id or group name): regex recognising the evaluations of the
+# trait itself among `phenotyping_reported`. Without it, words of the trait labels are matched.
+eval_patterns:
+  EFO_0004338: "^(body )?weight$"
+  MONDO_0004975: "^(?!.*biomarker).*(alzheimer|\\bAD\\b)"
+
+# Optional, per trait: key variants to look for in the scoring files (GRCh38)
+key_loci:
+  MONDO_0004975:
+    - name: APOE
+      chr: 19
+      snps: {rs429358: 44908684, rs7412: 44908822}
+      window: 500000
