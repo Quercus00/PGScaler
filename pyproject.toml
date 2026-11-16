@@ -1,5 +1,5 @@
 [project]
-authors = [{name = "Antoine", email = "antoine.didier@efrei.net"}]
+authors = [{name = "Antoine"}]
 dependencies = ["pandaspgs>=1.0.0,<2"]
 name = "pgscaler"
 requires-python = ">= 3.11"
@@ -11,7 +11,7 @@ requires = ["hatchling"]
 
 [tool.pixi.workspace]
 channels = ["conda-forge"]
-platforms = ["win-64"]
+platforms = ["linux-64", "win-64"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/foo"] 
